@@ -33,5 +33,11 @@ dist/
 build/
 *.egg-info/
 
-# Ignore documentation files
-*.md
+# Keep main README but ignore other docs
+!README.md
+DEPLOYMENT.md
+QUICKSTART.md
+READY_TO_DEPLOY.md
+VERCEL_SETUP_COMPLETE.md
+VERCEL_DEPLOY_SINHALA.md
+API_KEYS.md
