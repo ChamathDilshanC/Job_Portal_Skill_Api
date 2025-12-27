@@ -784,7 +784,7 @@ job_skills = {
         # Networking
         'Networking', 'TCP/IP', 'DNS', 'DHCP', 'VPN', 'Load Balancing', 'Reverse Proxy',
         'CDN', 'CloudFlare', 'Nginx', 'Apache', 'HAProxy', 'Traefik', 'Caddy',
-        'SSL/TLS', 'Certificates', 'Let's Encrypt', 'ACM',
+        'SSL/TLS', 'Certificates', "Let's Encrypt", 'ACM',
         # Security
         'Security', 'DevSecOps', 'Container Security', 'Image Scanning', 'Trivy', 'Clair',
         'Snyk', 'Aqua Security', 'Falco', 'OPA', 'Open Policy Agent', 'Vault',
