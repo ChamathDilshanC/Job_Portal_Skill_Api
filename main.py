@@ -6,6 +6,7 @@ from fastapi.openapi.utils import get_openapi
 from typing import List, Optional
 from pydantic import BaseModel
 from skills_data import job_skills, common_positions
+from degrees_data import COMMON_DEGREES, DEGREE_CATEGORIES, search_degrees, get_degrees_by_category, get_all_categories
 from dotenv import load_dotenv
 import uvicorn
 import secrets
@@ -86,6 +87,28 @@ class AllJobsResponse(BaseModel):
     total_positions: int
 
 
+class DegreesResponse(BaseModel):
+    degrees: List[str]
+    total_count: int
+
+
+class DegreeSearchResponse(BaseModel):
+    degrees: List[str]
+    query: str
+    total_count: int
+
+
+class DegreeCategoriesResponse(BaseModel):
+    categories: dict
+    total_categories: int
+
+
+class DegreeCategoryResponse(BaseModel):
+    category: str
+    degrees: List[str]
+    total_count: int
+
+
 @app.get("/", tags=["Root"])
 async def root():
     """Welcome endpoint with API information (No API key required)"""
@@ -98,7 +121,10 @@ async def root():
             "skills": "/api/skills/{position}",
             "suggestions": "/api/suggestions",
             "categories": "/api/categories",
-            "all_jobs": "/api/all-jobs"
+            "all_jobs": "/api/all-jobs",
+            "degrees": "/api/degrees",
+            "degrees_search": "/api/degrees/search",
+            "degree_categories": "/api/degrees/categories"
         },
         "documentation": {
             "swagger": "/docs (requires API key)",
@@ -338,6 +364,98 @@ async def get_all_jobs_with_skills(api_key: str = Security(verify_api_key)):
 async def health_check():
     """Health check endpoint"""
     return {"status": "healthy", "service": "Job Portal Skills API"}
+
+
+# ====================
+# DEGREES ENDPOINTS
+# ====================
+
+@app.get("/api/degrees", response_model=DegreesResponse, tags=["Degrees"])
+async def get_all_degrees(
+    limit: int = Query(100, ge=1, le=500, description="Maximum number of degrees to return"),
+    api_key: str = Security(verify_api_key)
+):
+    """
+    Get all available academic degrees and certifications (API Key Required)
+
+    - **limit**: Maximum number of degrees to return (1-500, default: 100)
+    """
+    degrees = COMMON_DEGREES[:limit]
+    return {
+        "degrees": degrees,
+        "total_count": len(COMMON_DEGREES)
+    }
+
+
+@app.get("/api/degrees/search", response_model=DegreeSearchResponse, tags=["Degrees"])
+async def search_degrees_endpoint(
+    q: str = Query(..., min_length=1, description="Search query for degrees"),
+    limit: int = Query(10, ge=1, le=50, description="Maximum number of results"),
+    api_key: str = Security(verify_api_key)
+):
+    """
+    Search for degrees based on query (API Key Required)
+
+    - **q**: Search query (minimum 1 character)
+    - **limit**: Maximum number of results (1-50, default: 10)
+
+    Examples:
+    - Search for "computer": Returns all computer-related degrees
+    - Search for "master": Returns all master's degrees
+    - Search for "engineering": Returns all engineering degrees
+    """
+    results = search_degrees(q, limit)
+    return {
+        "degrees": results,
+        "query": q,
+        "total_count": len(results)
+    }
+
+
+@app.get("/api/degrees/categories", response_model=DegreeCategoriesResponse, tags=["Degrees"])
+async def get_degree_categories_endpoint(api_key: str = Security(verify_api_key)):
+    """
+    Get all degree categories with their degrees (API Key Required)
+
+    Categories include:
+    - Undergraduate
+    - Graduate
+    - Doctoral
+    - Diplomas
+    - Professional
+    """
+    categories = get_all_categories()
+    return {
+        "categories": categories,
+        "total_categories": len(categories)
+    }
+
+
+@app.get("/api/degrees/categories/{category}", response_model=DegreeCategoryResponse, tags=["Degrees"])
+async def get_degrees_by_category_endpoint(
+    category: str,
+    api_key: str = Security(verify_api_key)
+):
+    """
+    Get degrees by specific category (API Key Required)
+
+    - **category**: Category name (Undergraduate, Graduate, Doctoral, Diplomas, Professional)
+    """
+    # Capitalize first letter to match category keys
+    category_formatted = category.capitalize()
+    degrees = get_degrees_by_category(category_formatted)
+
+    if not degrees:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Category '{category}' not found. Available categories: Undergraduate, Graduate, Doctoral, Diplomas, Professional"
+        )
+
+    return {
+        "category": category_formatted,
+        "degrees": degrees,
+        "total_count": len(degrees)
+    }
 
 
 if __name__ == "__main__":

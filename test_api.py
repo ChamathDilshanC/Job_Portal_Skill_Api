@@ -55,6 +55,10 @@ def main():
         ("Get Suggestions", "/api/suggestions?q=data", True),
         ("Get Categories", "/api/categories", True),
         ("Get All Jobs", "/api/all-jobs", True),
+        ("Get All Degrees", "/api/degrees?limit=50", True),
+        ("Search Degrees", "/api/degrees/search?q=computer&limit=10", True),
+        ("Get Degree Categories", "/api/degrees/categories", True),
+        ("Get Degrees by Category", "/api/degrees/categories/undergraduate", True),
     ]
 
     passed = 0

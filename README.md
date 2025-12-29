@@ -12,6 +12,7 @@ This API provides:
 
 - **36+ Job Positions** across Technology, Design, Business, and Finance domains
 - **100-200+ Skills per Position** including modern frameworks, tools, and technologies
+- **400+ Academic Degrees & Certifications** from undergraduate to professional qualifications
 - **Updated for 2025** with the latest industry-relevant skills
 - **Secure API Key Authentication** to protect your data
 - **Fast & Scalable** - Deployed on Vercel's edge network
@@ -222,6 +223,124 @@ curl -H "X-API-Key: your_api_key" \
 
 ---
 
+### 7. Get All Degrees
+
+**GET** `/api/degrees`
+
+Get all available academic degrees and certifications (400+ degrees).
+
+**Query Parameters:**
+
+- `limit` (optional): Maximum number of degrees to return (1-500, default: 100)
+
+**Headers:**
+
+- `X-API-Key`: Your API key (required)
+
+**Example:**
+
+```bash
+curl -H "X-API-Key: your_api_key" \
+     "https://job-potal-skill-api.vercel.app/api/degrees?limit=50"
+```
+
+**Response:**
+
+```json
+{
+  "degrees": [
+    "Bachelor of Science (BSc)",
+    "Master of Business Administration (MBA)",
+    "Doctor of Philosophy (PhD)",
+    ...
+  ],
+  "total_count": 400
+}
+```
+
+---
+
+### 8. Search Degrees
+
+**GET** `/api/degrees/search?q={query}`
+
+Search for degrees based on a query string.
+
+**Query Parameters:**
+
+- `q` (string): Search query (minimum 1 character)
+- `limit` (optional): Maximum results (1-50, default: 10)
+
+**Headers:**
+
+- `X-API-Key`: Your API key (required)
+
+**Example:**
+
+```bash
+curl -H "X-API-Key: your_api_key" \
+     "https://job-potal-skill-api.vercel.app/api/degrees/search?q=computer&limit=10"
+```
+
+**Response:**
+
+```json
+{
+  "degrees": [
+    "Bachelor of Science in Computer Science (BSc CS)",
+    "Master of Computer Applications (MCA)",
+    "Diploma in Computer Science",
+    ...
+  ],
+  "query": "computer",
+  "total_count": 10
+}
+```
+
+---
+
+### 9. Get Degree Categories
+
+**GET** `/api/degrees/categories`
+
+Get all degree categories (Undergraduate, Graduate, Doctoral, Diplomas, Professional).
+
+**Headers:**
+
+- `X-API-Key`: Your API key (required)
+
+**Example:**
+
+```bash
+curl -H "X-API-Key: your_api_key" \
+     https://job-potal-skill-api.vercel.app/api/degrees/categories
+```
+
+---
+
+### 10. Get Degrees by Category
+
+**GET** `/api/degrees/categories/{category}`
+
+Get degrees from a specific category.
+
+**Path Parameters:**
+
+- `category` (string): Category name (undergraduate, graduate, doctoral, diplomas, professional)
+
+**Headers:**
+
+- `X-API-Key`: Your API key (required)
+
+**Example:**
+
+```bash
+curl -H "X-API-Key: your_api_key" \
+     "https://job-potal-skill-api.vercel.app/api/degrees/categories/undergraduate"
+```
+
+---
+
 ## 💻 Code Examples
 
 ### JavaScript (Fetch API)
@@ -289,7 +408,42 @@ api.get('/api/positions').then(response => console.log(response.data));
 api
   .get('/api/skills/Frontend Developer')
   .then(response => console.log(response.data));
+
+// Search degrees
+api
+  .get('/api/degrees/search?q=computer')
+  .then(response => console.log(response.data));
 ```
+
+---
+
+## 🎓 Degree Database
+
+The API includes **400+ academic degrees and professional certifications**:
+
+### Categories
+
+- **Undergraduate** (70+): Bachelor's degrees (BSc, BA, BEng, BTech, BBA, etc.)
+- **Graduate** (80+): Master's degrees (MSc, MA, MBA, MEng, MCA, etc.)
+- **Doctoral** (20+): PhD, MD, DBA, EdD, and other professional doctorates
+- **Diplomas** (50+): Various diploma and certificate programs
+- **Professional** (40+): CA, CPA, PMP, CFA, CISSP, AWS, etc.
+- **Associate** (8+): AA, AS, AAS degrees
+- **International** (10+): A-Levels, IB, Baccalauréat, etc.
+
+### Fields Covered
+
+- Computer Science & IT
+- Engineering (All disciplines)
+- Business & Management
+- Finance & Accounting
+- Health Sciences
+- Law
+- Education
+- Arts & Humanities
+- Science & Research
+
+📖 **[View Complete Degrees API Documentation](./API_DEGREES.md)**
 
 ---
 
